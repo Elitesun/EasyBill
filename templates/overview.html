@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <!-- Header Section -->
+    <header class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Business Overview</h1>
+        <nav>
+            <a href="{% url 'dashboard' %}" class="text-blue-500 hover:underline ml-4">Dashboard</a>
+            <a href="{% url 'client_list' %}" class="text-blue-500 hover:underline ml-4">Clients</a>
+        </nav>
+    </header>
+    
+    <!-- Key Metrics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gray-800 p-4 rounded-lg shadow">
+            <h3 class="text-gray-400 text-sm">Total Clients</h3>
+            <p class="text-2xl font-bold text-white">{{ total_clients }}</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg shadow">
+            <h3 class="text-gray-400 text-sm">Total Invoices</h3>
+            <p class="text-2xl font-bold text-white">{{ total_invoices }}</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg shadow">
+            <h3 class="text-gray-400 text-sm">Pending Payments</h3>
+            <p class="text-2xl font-bold text-white">{{ pending_payments }}</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg shadow">
+            <h3 class="text-gray-400 text-sm">Total Revenue</h3>
+            <p class="text-2xl font-bold text-white">${{ total_revenue|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Monthly Revenue Chart -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-white mb-4">Monthly Revenue</h2>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Invoice Status Distribution -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-white mb-4">Invoice Status Distribution</h2>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Client Growth Chart -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-white mb-4">Client Growth</h2>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="clientGrowthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Clients Chart -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-white mb-4">Top Clients by Revenue</h2>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="topClientsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Parse the JSON data from Django
+    const revenueData = JSON.parse('{{ revenue_data|safe }}');
+    const statusData = JSON.parse('{{ status_data|safe }}');
+    const growthData = JSON.parse('{{ growth_data|safe }}');
+    const topClientsData = JSON.parse('{{ top_clients_data|safe }}');
+
+    // Set default Chart.js colors and styles for dark theme
+    Chart.defaults.color = '#fff';
+    Chart.defaults.borderColor = '#374151';
+    
+    // Monthly Revenue Chart
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: revenueData.labels,
+            datasets: [{
+                label: 'Revenue ($)',
+                data: revenueData.values,
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Invoice Status Distribution Chart
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: statusData.labels,
+            datasets: [{
+                data: statusData.values,
+                backgroundColor: [
+                    '#10B981', // paid
+                    '#F59E0B', // pending
+                    '#EF4444'  // unpaid
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                }
+            },
+            cutout: '70%'
+        }
+    });
+
+    // Client Growth Chart
+    new Chart(document.getElementById('clientGrowthChart'), {
+        type: 'bar',
+        data: {
+            labels: growthData.labels,
+            datasets: [{
+                label: 'New Clients',
+                data: growthData.values,
+                backgroundColor: '#60A5FA',
+                borderColor: '#3B82F6',
+                borderWidth: 0,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Top Clients Chart
+    new Chart(document.getElementById('topClientsChart'), {
+        type: 'bar',
+        data: {
+            labels: topClientsData.labels,
+            datasets: [{
+                label: 'Revenue ($)',
+                data: topClientsData.values,
+                backgroundColor: '#8B5CF6',
+                borderColor: '#7C3AED',
+                borderWidth: 0,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

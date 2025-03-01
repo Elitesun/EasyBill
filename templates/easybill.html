@@ -1,0 +1,441 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Navigation Bar -->
+    <!-- sticky top-0: Makes navbar stick to top when scrolling -->
+    <!-- backdrop-filter backdrop-blur: Creates frosted glass effect -->
+    <!-- z-50: Ensures navbar stays above other content -->
+    <nav
+        class="sticky top-0 w-full bg-gray-900 bg-opacity-90 backdrop-filter backdrop-blur z-50 border-b border-gray-800">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center justify-between">
+            <!-- Logo Section -->
+            <!-- transform hover:scale-105: Slight grow effect on hover -->
+            <a
+                class="flex title-font font-medium items-center px-2 mb-4 md:mb-0 transform hover:scale-105 transition duration-300">
+                <div class="w-12 h-12 rounded-xl shadow-lg overflow-hidden">
+                    <img class="w-full h-full object-cover" alt="logo" src="{% static 'rb_36.png'%}" />
+                </div>
+                <span class="ml-3 text-2xl font-bold text-white">EasyBill</span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- Nav Items -->
+                <!-- hover:text-blue-400: Changes text color on hover -->
+                <!-- transition-colors: Smooth color transition -->
+                <div class="flex items-center space-x-8 mr-8">
+                    <a class="text-gray-300 hover:text-blue-400 transition-colors duration-200">Features</a>
+                    <a class="text-gray-300 hover:text-blue-400 transition-colors duration-200">Solutions</a>
+                    <a class="text-gray-300 hover:text-blue-400 transition-colors duration-200">Pricing</a>
+                </div>
+                <!-- Sign In Button -->
+                <!-- hover:-translate-y-0.5: Slight upward movement on hover -->
+                <a class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold 
+                          transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg" href="{% url 'login' %}">
+                    Sign In 
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <!-- pt-20: Extra padding top to account for sticky navbar -->
+    <section class="relative w-full pt-20 overflow-hidden">
+        <div class="container mx-auto flex py-16 px-5 md:flex-row flex-col items-center">
+            <!-- Left Content -->
+            <div class="w-full md:w-1/2 px-4 md:px-8 md:text-left text-center mb-16 md:mb-0">
+                <!-- Main Heading -->
+                <!-- tracking-tight: Reduces letter spacing for modern look -->
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-6">
+                    Smart Invoicing for
+                    <span class="gradient-text">Small Business</span>
+                </h1>
+
+                <!-- Subheading -->
+                <!-- leading-relaxed: Comfortable line height -->
+                <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                    Create professional invoices, track payments, and manage your business finances all in one place.
+                    Perfect for freelancers and small businesses.
+                </p>
+
+                <!-- Feature List -->
+                <!-- space-y-4: Vertical spacing between items -->
+                <div class="flex flex-col space-y-4 mb-8">
+                    <!-- Feature items with checkmark -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <span class="text-gray-200">Create invoices in under 60 seconds</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <span class="text-gray-200">Automatic payment reminders</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <span class="text-gray-200">Real-time financial insights</span>
+                    </div>
+                </div>
+
+                <!-- Call to Action Buttons -->
+                <!-- space-x-4: Horizontal spacing between buttons -->
+                <div class="flex flex-wrap justify-center md:justify-start space-x-4">
+                    <!-- Primary CTA -->
+                    <!-- shadow-lg hover:shadow-xl: Enhanced shadow on hover -->
+                    <a class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold 
+                              px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 
+                              transition-all duration-200">
+                        Start Free Trial
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </a>
+                    <!-- Secondary CTA -->
+                    <!-- border-2: Thicker border for better visibility -->
+                    <a class="inline-flex items-center gap-2 border-2 border-gray-600 hover:border-gray-500 
+                              text-gray-300 hover:text-white font-bold px-8 py-4 rounded-xl 
+                              transition-all duration-200">
+                        Watch Demo
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Side - Software Interface Preview -->
+            <div class="w-full md:w-1/2 relative">
+                <!-- Background Effects -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/10 to-purple-600/10 rounded-3xl"></div>
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-blue-500/5 rounded-full blur-3xl">
+                </div>
+
+                <!-- Interface Preview -->
+                <div class="relative mt-8 md:mt-0">
+                    <!-- Main Dashboard Preview -->
+                    <div class="bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-800 shadow-2xl p-6 
+                              transform hover:-translate-y-1 transition-all duration-300">
+                        <!-- Top Navigation -->
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 6h16M4 12h16M4 18h7" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-white text-lg font-semibold">Dashboard</h3>
+                                </div>
+                                <div class="hidden md:flex gap-4 text-gray-400">
+                                    <a class="hover:text-white transition-colors">Overview</a>
+                                    <a class="hover:text-white transition-colors">Invoices</a>
+                                    <a class="hover:text-white transition-colors">Clients</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button
+                                    class="bg-blue-500/10 text-blue-400 p-2 rounded-lg hover:bg-blue-500/20 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                                <button
+                                    class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                                    New Invoice
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="p-2 bg-green-500/10 rounded-lg">
+                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-gray-400 text-sm">Total Revenue</span>
+                                </div>
+                                <p class="text-white text-xl font-bold mb-1">$24,850</p>
+                                <p class="text-green-400 text-sm flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                    </svg>
+                                    12% vs last month
+                                </p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="p-2 bg-yellow-500/10 rounded-lg">
+                                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-gray-400 text-sm">Outstanding</span>
+                                </div>
+                                <p class="text-white text-xl font-bold mb-1">$5,240</p>
+                                <p class="text-yellow-400 text-sm">3 invoices pending</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="p-2 bg-purple-500/10 rounded-lg">
+                                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-gray-400 text-sm">Clients</span>
+                                </div>
+                                <p class="text-white text-xl font-bold mb-1">48</p>
+                                <p class="text-purple-400 text-sm">+2 this month</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="p-2 bg-blue-500/10 rounded-lg">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-gray-400 text-sm">Invoices</span>
+                                </div>
+                                <p class="text-white text-xl font-bold mb-1">156</p>
+                                <p class="text-blue-400 text-sm">12 this month</p>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-white font-medium">Recent Activity</h4>
+                                <button class="text-gray-400 hover:text-white text-sm transition-colors">View
+                                    All</button>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <div>
+                                        <p class="text-gray-300">Invoice #1092 Paid</p>
+                                        <p class="text-gray-500 text-sm">Today at 2:30 PM</p>
+                                    </div>
+                                </div>
+                                <p class="text-white font-medium">$1,200</p>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                    <div>
+                                        <p class="text-gray-300">New Invoice Created</p>
+                                        <p class="text-gray-500 text-sm">Today at 1:15 PM</p>
+                                    </div>
+                                </div>
+                                <p class="text-white font-medium">$3,450</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Elements -->
+                    <div class="absolute -right-4 top-1/4 transform rotate-6">
+                        <div class="bg-blue-500/10 backdrop-blur rounded-lg p-3">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="absolute -left-4 bottom-1/4 transform -rotate-6">
+                        <div class="bg-green-500/10 backdrop-blur rounded-lg p-3">
+                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="w-full py-20 bg-gray-900">
+        <div class="container mx-auto px-5">
+            <!-- Section Header -->
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                        Powerful Features for Your Business
+                    </h2>
+                    <p class="text-xl text-gray-300">
+                        Everything you need to manage invoices, track payments, and grow your business - all in one
+                        place.
+                    </p>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Card Container -->
+                    <div class="bg-gray-900/90 p-8 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:bg-gray-800/90 
+                            transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="p-3 bg-blue-500/10 rounded-xl">
+                                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white">Professional Invoices</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            Create beautiful, customized invoices in seconds. Add your logo, choose your colors,
+                            and send invoices that get you paid faster.
+                        </p>
+                        <div class="mt-6 flex items-center text-blue-400 text-sm">
+                            <span>Learn more</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/90 p-8 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:bg-gray-800/90 
+                            transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="p-3 bg-green-500/10 rounded-xl">
+                                <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white">Smart Payment Tracking</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            Automatic payment reminders, real-time status updates, and instant notifications
+                            when you get paid. Never chase payments again.
+                        </p>
+                        <div class="mt-6 flex items-center text-green-400 text-sm">
+                            <span>Learn more</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/90 p-8 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:bg-gray-800/90 
+                            transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="p-3 bg-purple-500/10 rounded-xl">
+                                <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white">Business Insights</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            Beautiful dashboards and reports that show you exactly how your business is performing.
+                            Make better decisions with real-time data.
+                        </p>
+                        <div class="mt-6 flex items-center text-purple-400 text-sm">
+                            <span>Learn more</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full bg-gray-900 border-t border-gray-800">
+        <div class="container mx-auto py-12 px-4">
+            <!-- Footer Content -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <!-- Logo Section -->
+                <div class="mb-8 md:mb-0">
+                    <img class="w-20 h-20" src="{% static 'rb_36.png' %}" alt="EasyBill Logo" />
+                </div>
+
+                <!-- About Section -->
+                <div class="text-center md:text-left md:w-1/2">
+                    <h4 class="text-white font-bold text-lg mb-4">About EasyBill</h4>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        At EasyBill, we make billing simple, efficient, and stress-free. Our platform helps businesses
+                        of all sizes streamline invoicing, track payments, and gain financial insights—all in one place.
+                    </p>
+                </div>
+
+                <!-- Social Links -->
+                <!-- space-x-6: Horizontal spacing between icons -->
+                <div class="flex space-x-6 mt-8 md:mt-0">
+                    <a class="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M22.675 0h-21.35c-.733 0-1.325.592-1.325 1.325v21.351c0 .733.592 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.672c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12v9.294h6.116c.733 0 1.325-.591 1.325-1.324v-21.35c0-.733-.592-1.325-1.325-1.325z" />
+                        </svg>
+                    </a>
+                    <a class="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.723-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.717 0-4.917 2.2-4.917 4.917 0 .386.044.762.128 1.124-4.083-.205-7.702-2.159-10.126-5.134-.423.725-.666 1.562-.666 2.457 0 1.694.863 3.188 2.175 4.065-.802-.026-1.558-.246-2.218-.616v.062c0 2.366 1.684 4.342 3.918 4.788-.41.111-.843.171-1.287.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.6 3.417-1.68 1.318-3.809 2.105-6.102 2.105-.396 0-.787-.023-1.175-.068 2.179 1.397 4.768 2.212 7.548 2.212 9.054 0 14.002-7.496 14.002-13.986 0-.213-.005-.425-.014-.636.961-.695 1.797-1.562 2.457-2.549z" />
+                        </svg>
+                    </a>
+                    <a class="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center text-sm text-gray-500">
+                <p>©2023 EasyBill. All rights reserved.</p>
+                <div class="mt-2">
+                    <a class="hover:text-gray-300 mx-2 transition-colors duration-200">Privacy Policy</a>
+                    <a class="hover:text-gray-300 mx-2 transition-colors duration-200">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

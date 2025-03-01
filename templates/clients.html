@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-3">
+    <h1 class="text-2xl font-bold mb-4 text-white">Clients</h1>
+
+    <div class="flex justify-between items-center mb-4">
+        <a href="{% url 'dashboard' %}" class="text-blue-400 hover:text-blue-300 font-medium flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Dashboard
+        </a>
+        <a href="{% url 'register_client' %}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-medium">Register New Client</a>
+    </div>
+    <div class="w-full max-w-5xl">
+        <div class="flex flex-wrap gap-4">
+            {% for client in clients %}
+                <div class="bg-gray-800 border border-gray-700 p-3 rounded-lg hover:bg-gray-700 transition-colors flex-1 min-w-[250px] max-w-[350px]">
+                    <div class="mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28px" height="28px"><path fill="#ffa000" d="M40,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h29.7L44,29V16C44,13.8,42.2,12,40,12z"/><path fill="#ffca28" d="M40,12H8c-2.2,0-4,1.8-4,4v20c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V16C44,13.8,42.2,12,40,12z"/></svg>
+                    </div>
+                    <h2 class="text-base font-bold text-white mb-1">{{ client.name }}</h2>
+                    <a href="{% url 'client_detail' client.id %}" class="text-blue-400 hover:text-blue-300 font-medium text-sm">View Details</a>
+                </div>
+            {% empty %}
+                <p>No clients registered yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

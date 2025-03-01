@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>EasyBill - Smart Invoicing for Small Businesses</title>
+    <!-- Tailwind CSS CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        /* Custom gradient text effect */
+        .gradient-text {
+            background: linear-gradient(135deg, #60A5FA, #7C3AED);
+            /* Blue to Purple gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Dark background with slight blue tint */
+        body {
+            background-color: #111827;
+        }
+
+        /* Smooth scrolling for the whole page */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Floating animation for illustration elements */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes floatDelayed {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-float-delayed {
+            animation: floatDelayed 5s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        .message {
+        transition: opacity 0.5s ease-in-out;
+    }
+    .message.success {
+        background-color: #4CAF50;
+    }
+    .message.error {
+        background-color: #F44336;
+    }
+    .message.warning {
+        background-color: #FFC107;
+    }
+    .message.info {
+        background-color: #2196F3;
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+    </style>
+</head>
+
+<body>
+    {% if messages %}
+    <div class="messages fixed top-0 left-0 right-0 z-50">
+        {% for message in messages %}
+        <div class="message {{ message.tags }} bg-opacity-90 text-white p-4 mb-2 text-center">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+    <script>
+        // JavaScript to handle message fadeout
+        document.addEventListener('DOMContentLoaded', function() {
+            var messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                message.style.animation = 'fadeOut 5s forwards';
+                setTimeout(function() {
+                    message.remove();
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+
+</html>

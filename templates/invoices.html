@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="flex justify-between items-center mb-6">
+    <nav>
+        <a href="{% url 'dashboard' %}" class="text-blue-500 hover:underline ml-4">Dashboard</a>
+        <a href="{% url 'client_list' %}" class="text-blue-500 hover:underline ml-4">Clients</a>
+    </nav>
+</header>
+<div class="container mx-auto p-6">
+    
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Invoices</h1>
+        <a href="{% url 'create_invoice' %}" class="new-invoice-btn">
+            <span class="plus">+</span> New Invoice
+        </a>
+    </div>
+
+    <div class="invoice-filters mb-6">
+        <select id="statusFilter" class="bg-gray-800 text-white rounded px-4 py-2 mr-4">
+            <option value="all">All Status</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="unpaid">Unpaid</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="Search invoices..." class="bg-gray-800 text-white rounded px-4 py-2">
+    </div>
+
+    <div class="invoice-list">
+        {% for invoice in invoices %}
+        <div class="invoice-item bg-gray-800 rounded-lg p-4 mb-4 flex items-center justify-between">
+            <div class="invoice-info flex-grow">
+                <div class="flex items-center">
+                    <span class="text-lg font-semibold text-white mr-4">#{{ invoice.id }}</span>
+                    <span class="text-gray-400">{{ invoice.client.name }}</span>
+                </div>
+                <div class="text-sm text-gray-500">{{ invoice.invoice_date|date:"M d, Y" }}</div>
+            </div>
+            <div class="invoice-amount text-right mr-6">
+                <div class="text-lg font-bold text-white">FCFA {{ invoice.total }}</div>
+                <div class="status-badge {{ invoice.status }}">{{ invoice.status|upper }}</div>
+            </div>
+            <div class="invoice-actions flex items-center space-x-2">
+                <form method="post" action="{% url 'update_invoice_status' invoice.id %}" class="inline">
+                    {% csrf_token %}
+                    <select name="status" onchange="this.form.submit()" class="bg-gray-700 text-white rounded px-2 py-1">
+                        <option value="paid" {% if invoice.status == 'paid' %}selected{% endif %}>PAID</option>
+                        <option value="pending" {% if invoice.status == 'pending' %}selected{% endif %}>PENDING</option>
+                        <option value="unpaid" {% if invoice.status == 'unpaid' %}selected{% endif %}>UNPAID</option>
+                    </select>
+                </form>
+                <a href="{% url 'edit_invoice' invoice.id %}" class="bg-blue-600 text-white rounded px-3 py-1">Edit</a>
+                <form method="post" action="{% url 'delete_invoice' invoice.id %}" class="inline" onsubmit="return confirm('Delete invoice #{{ invoice.id }}?');">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-600 text-white rounded px-3 py-1">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-gray-500 py-8">
+            No invoices found
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.status-badge.paid { background-color: rgba(76, 175, 80, 0.7); }
+.status-badge.pending { background-color: rgba(255, 152, 0, 0.7); }
+.status-badge.unpaid { background-color: rgba(244, 67, 54, 0.7); }
+
+.invoice-filters select,
+.invoice-filters input {
+    border: 1px solid #4a5568;
+}
+
+.invoice-filters input::placeholder {
+    color: #a0aec0;
+}
+
+.new-invoice-btn {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(to right, #4CAF50, #45a049);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.new-invoice-btn .plus {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.invoice-item:hover {
+    background-color: #2d3748;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusFilter = document.getElementById('statusFilter');
+    const searchInput = document.getElementById('searchInput');
+    const invoiceItems = document.querySelectorAll('.invoice-item');
+
+    function filterInvoices() {
+        const status = statusFilter.value;
+        const searchText = searchInput.value.toLowerCase();
+
+        invoiceItems.forEach(item => {
+            const itemStatus = item.querySelector('.status-badge').textContent.toLowerCase();
+            const itemText = item.textContent.toLowerCase();
+            const statusMatch = status === 'all' || itemStatus === status;
+            const searchMatch = itemText.includes(searchText);
+
+            item.style.display = statusMatch && searchMatch ? 'flex' : 'none';
+        });
+    }
+
+    statusFilter.addEventListener('change', filterInvoices);
+    searchInput.addEventListener('input', filterInvoices);
+});
+</script>
+{% endblock %}

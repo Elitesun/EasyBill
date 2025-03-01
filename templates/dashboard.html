@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<nav class="navbar">
+    <div class="nav-links">
+        <a href="#" class="active">Dashboard</a>
+        <a href="{% url 'overview' %}">Overview</a>
+        <a href="{% url 'invoice_list' %}">Invoices</a>
+        <a href="{% url 'client_list' %}">Clients</a>
+    </div>
+    <a href="{% url 'create_invoice' %}" class="new-invoice-btn"><span class="plus"><svg width="32" height="35" viewBox="0 0 32 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect width="32" height="35" fill="url(#pattern0_51_16)"/>
+        <defs>
+        <pattern id="pattern0_51_16" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <use xlink:href="#image0_51_16" transform="matrix(0.01 0 0 0.00914286 0 0.0428571)"/>
+        </pattern>
+        <image id="image0_51_16" width="100" height="100" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nO3bMW7CQBQAUR+EgmjouEsumuMlWxMtZQo7BcqO4nnS77bAf6Aw0m5bkiRJkuTYbVy269fH7swz+SN83re38dideSYFOSf6hbhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhw5iDz8uR8ONNcx/thkHlm9ef8OS+5iDpvtB49fPP41Q7mLgsyPF+Ygoz1EQoy1i++IGP9sgsy1i+4IGP9Ugsy1i9SFaQXw7vrxdCIM/91YkRBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxoSAuFMSFgrhQEBcK4kJBXCiICwVxuY3L80br3vzbC5ZJkiRJsr3UN4XS1zoYsVZgAAAAAElFTkSuQmCC"/>
+        </defs>
+        </svg>
+        </span> New Invoice
+    </a>
+</nav>
+
+<div class="stats-container">
+    <div class="stat-card">
+        <div class="icon money-icon"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="30" height="30" fill="url(#pattern0_51_25)"/>
+            <defs>
+            <pattern id="pattern0_51_25" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_51_25" transform="scale(0.01)"/>
+            </pattern>
+            <image id="image0_51_25" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+            </defs>
+            </svg>
+        </div>
+        <div class="stat-info">
+            <h3>Total Revenue</h3>
+            <div class="amount">FCFA {{ total_revenue|default:"0" }}</div>
+            <div class="trend positive">
+                <span class="period">Total Paid Invoices</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="icon pending-icon"><svg width="24" height="40" viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="24" height="40" fill="url(#pattern0_51_62)"/>
+            <defs>
+            <pattern id="pattern0_51_62" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_51_62" transform="matrix(0.01 0 0 0.006 0 0.2)"/>
+            </pattern>
+            <image id="image0_51_62" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+            </defs>
+            </svg>
+        </div>
+        <div class="stat-info">
+            <h3>Pending</h3>
+            <div class="amount">{{ pending_invoices|default:"0" }}</div>
+            <div class="pending-note">Invoices Pending</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="icon clients-icon"><svg width="33" height="47" viewBox="0 0 33 47" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="33" height="47" fill="url(#pattern0_51_65)"/>
+            <defs>
+            <pattern id="pattern0_51_65" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_51_65" transform="matrix(0.01 0 0 0.00702128 0 0.148936)"/>
+            </pattern>
+            <image id="image0_51_65" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+            </defs>
+            </svg>
+        </div>
+        <div class="stat-info">
+            <h3>Total Invoices</h3>
+            <div class="number">{{ total_invoices|default:"0" }}</div>
+            <div class="period purple">All Time</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="icon clients-icon"><svg width="45" height="54" viewBox="0 0 45 54" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="45" height="54" fill="url(#pattern0_51_64)"/>
+            <defs>
+            <pattern id="pattern0_51_64" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_51_64" transform="matrix(0.01 0 0 0.00833333 0 0.0833333)"/>
+            </pattern>
+            <image id="image0_51_64" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+            </defs>
+            </svg>
+        </div>
+        <div class="stat-info">
+            <h3>Total Clients</h3>
+            <div class="number">{{ total_clients}}</div>
+            <div class="period purple">All Time</div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-activity">
+    <div class="header">
+        <h2>Recent Activity</h2>
+        <a href="{% url 'invoice_list' %}" class="view-all">View All</a>
+    </div>
+    
+    <div class="activity-list">
+        {% for invoice in recent_invoices %}
+        <div class="activity-item">
+            <div class="status-dot {% if invoice.status == 'paid' %}paid{% elif invoice.status == 'pending' %}pending{% else %}created{% endif %}"></div>
+            <span class="type">Invoice</span>
+            <span class="id">#{{ invoice.id }}</span>
+            <span class="client">{{ invoice.client.name }}</span>
+            <span class="status">{{ invoice.status|upper }}</span>
+            <span class="amount">FCFA {{ invoice.total }}</span>
+            <span class="date">{{ invoice.invoice_date|date:"M d, Y h:i A" }}</span>
+            <div class="actions" style="display: flex; align-items: center; gap: 8px;">
+                <form method="post" action="{% url 'update_invoice_status' invoice.id %}" style="display: flex; align-items: center;">
+                    {% csrf_token %}
+                    <select name="status" onchange="this.form.submit()" style="padding: 4px 8px; border-radius: 4px; background: {% if invoice.status == 'paid' %}rgba(76, 175, 80, 0.7){% elif invoice.status == 'pending' %}rgba(255, 152, 0, 0.7){% else %}rgba(244, 67, 54, 0.7){% endif %}; color: white; border: none; cursor: pointer; font-size: 14px;">
+                        <option value="paid" {% if invoice.status == 'paid' %}selected{% endif %}>PAID</option>
+                        <option value="pending" {% if invoice.status == 'pending' %}selected{% endif %}>PENDING</option>
+                        <option value="unpaid" {% if invoice.status == 'unpaid' %}selected{% endif %}>UNPAID</option>
+                    </select>
+                </form>
+                <a href="{% url 'edit_invoice' invoice.id %}" style="padding: 4px 8px; border-radius: 4px; background: rgba(76, 175, 80, 0.7); color: white; text-decoration: none; font-size: 14px;">Edit</a>
+                <form method="post" action="{% url 'delete_invoice' invoice.id %}" style="display: flex; align-items: center;" onsubmit="return confirm('Delete invoice #{{ invoice.id }}?');">
+                    {% csrf_token %}
+                    <button type="submit" style="width: 24px; height: 24px; border-radius: 4px; background: #f44336; color: white; border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; line-height: 1;">×</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="activity-item">
+            <p>No recent invoices</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

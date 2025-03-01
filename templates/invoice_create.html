@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="invoice-container">
+    <div class="invoice-header">
+        <a href="{% url 'dashboard' %}" class="back-btn">←</a>
+        <h1>{% if invoice %}Edit Invoice{% else %}Create Invoice{% endif %}</h1>
+        <div class="header-actions">
+            {% if invoice %}
+                <form method="post" action="{% url 'delete_invoice' invoice.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this invoice?');">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn-header">Delete</button>
+                </form>
+            {% endif %}
+            <button type="submit" form="invoice-form" class="save-btn">Save</button>
+        </div>
+    </div>
+
+    <form id="invoice-form" method="post" class="invoice-form">
+        {% csrf_token %}
+        
+        <!-- Client and Status Selection -->
+        <div class="client-section">
+            <div class="form-group">
+                <label for="{{ form.client.id_for_label }}">Select Client</label>
+                {{ form.client }}
+            </div>
+            <div class="form-group mt-4">
+                <label for="{{ form.status.id_for_label }}">Invoice Status</label>
+                {{ form.status }}
+            </div>
+        </div>
+
+        <!-- Invoice Table -->
+        <div class="invoice-table">
+            <div class="table-header">
+                <div class="col designation">Designation</div>
+                <div class="col quantity">Quantity</div>
+                <div class="col unit-price">Unit Price</div>
+                <div class="col amount">Amount</div>
+                <div class="col actions"></div>
+            </div>
+
+            <div id="invoice-items">
+                {% for item_form in form.item_forms %}
+                <div class="table-row">
+                    <div class="col designation">
+                        <input type="text" name="item-{{ forloop.counter0 }}-item_name" 
+                               id="id_item-{{ forloop.counter0 }}-item_name" 
+                               value="{{ item_form.item_name.value|default:'' }}"
+                               placeholder="-" required>
+                    </div>
+                    <div class="col quantity">
+                        <input type="number" name="item-{{ forloop.counter0 }}-quantity" 
+                               id="id_item-{{ forloop.counter0 }}-quantity" 
+                               value="{{ item_form.quantity.value|default:'1' }}"
+                               min="1" required>
+                    </div>
+                    <div class="col unit-price">
+                        <input type="number" name="item-{{ forloop.counter0 }}-unit_price" 
+                               id="id_item-{{ forloop.counter0 }}-unit_price" 
+                               value="{{ item_form.unit_price.value|default:'0' }}"
+                               step="0.01" min="0" required>
+                    </div>
+                    <div class="col amount">0</div>
+                    <div class="col actions">
+                        <button type="button" class="delete-btn" onclick="deleteInvoiceItem(this)">×</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="add-item-btn" onclick="addInvoiceItem()">
+                + New Item
+            </div>
+        </div>
+
+        <!-- Invoice Summary -->
+        <div class="invoice-summary">
+            <div class="summary-row">
+                <span>TOTAL AMOUNT HT</span>
+                <span class="amount-value" id="total-ht">0</span>
+            </div>
+            <div class="summary-row">
+                <span>Discount</span>
+                <div class="discount-input">
+                    <input type="number" name="discount" id="discount" min="0" max="100" value="0">
+                    <span>%</span>
+                </div>
+                <span class="amount-value" id="discount-amount">0</span>
+            </div>
+            <div class="summary-row">
+                <span>TAX</span>
+                <div class="vat-input">
+                    {{ form.tax }}
+                    <span>%</span>
+                </div>
+                <span class="amount-value" id="vat-amount">0</span>
+            </div>
+            <div class="summary-row total">
+                <span>TOTAL AMOUNT</span>
+                <span class="amount-value" id="total-amount">0</span>
+            </div>
+        </div>
+
+        <input type="hidden" name="item_count" id="item-count" value="{{ form.item_forms|length }}">
+        {{ form.description.as_hidden }}
+    </form>
+</div>
+
+<style>
+body {
+    background-color: #14171e;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.invoice-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.invoice-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.back-btn {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.invoice-header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.save-btn {
+    background: #00FF7F;
+    color: #000000;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-btn-header {
+    background: #FF4D4D;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-btn-header:hover {
+    background: #ff3333;
+}
+
+.client-section {
+    background: #1A1D21;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.client-section label {
+    display: block;
+    margin-bottom: 8px;
+    color: #8B949E;
+}
+
+.client-section select {
+    width: 100%;
+    padding: 8px 12px;
+    background: #2D333B;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.mt-4 {
+    margin-top: 20px;
+}
+
+.invoice-table {
+    background: #1A1D21;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 40px;
+    padding: 12px 20px;
+    background: #2D333B;
+    font-size: 14px;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 40px;
+    padding: 12px 20px;
+   
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    padding: 0;
+}
+
+.table-row input:focus {
+    outline: none;
+}
+
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #FF4D4D;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 100%;
+    text-align: right;
+}
+
+.add-item-btn {
+    padding: 12px 20px;
+    color: #00FF7F;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.invoice-summary {
+    background: #1A1D21;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.summary-row {
+    display: grid;
+    grid-template-columns: 1fr auto 120px;
+    padding: 8px 0;
+    align-items: center;
+    font-size: 14px;
+}
+
+.summary-row.total {
+    border-top: 1px solid #2D333B;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.discount-input, .vat-input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.discount-input input, .vat-input input {
+    width: 50px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: right;
+    padding: 0;
+}
+
+.discount-input input:focus, .vat-input input:focus {
+    outline: none;
+}
+
+.amount-value {
+    text-align: right;
+}
+
+.col.amount {
+    text-align: right;
+}
+
+#id_tax {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    width: 50px;
+    text-align: right;
+}
+</style>
+
+<script>
+(function() {
+    var formIndex = parseInt("{{ form.item_forms|length }}", 10);
+
+    function setupRowCalculations(row) {
+        const quantityInput = row.querySelector('input[id*=quantity]');
+        const priceInput = row.querySelector('input[id*=unit_price]');
+        const amountElement = row.querySelector('.amount');
+        
+        function updateAmount() {
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const amount = quantity * price;
+            amountElement.textContent = amount.toFixed(2);
+            updateTotals();
+        }
+        
+        quantityInput.addEventListener('input', updateAmount);
+        priceInput.addEventListener('input', updateAmount);
+    }
+
+    function updateTotals() {
+        const amounts = Array.from(document.querySelectorAll('.amount'))
+            .map(el => parseFloat(el.textContent) || 0);
+        
+        const totalHT = amounts.reduce((sum, amount) => sum + amount, 0);
+        document.getElementById('total-ht').textContent = totalHT.toFixed(2);
+        
+        const discount = parseFloat(document.getElementById('discount').value) || 0;
+        const discountAmount = totalHT * (discount / 100);
+        document.getElementById('discount-amount').textContent = discountAmount.toFixed(2);
+        
+        const vat = parseFloat(document.getElementById('id_tax').value) || 0;
+        const vatAmount = (totalHT - discountAmount) * (vat / 100);
+        document.getElementById('vat-amount').textContent = vatAmount.toFixed(2);
+        
+        const totalAmount = totalHT - discountAmount + vatAmount;
+        document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+    }
+
+    window.addInvoiceItem = function() {
+        const container = document.getElementById('invoice-items');
+        const newRow = document.createElement('div');
+        newRow.className = 'table-row';
+        
+        newRow.innerHTML = `
+            <div class="col designation">
+                <input type="text" name="item-${formIndex}-item_name" 
+                       id="id_item-${formIndex}-item_name" 
+                       placeholder="-" required>
+            </div>
+            <div class="col quantity">
+                <input type="number" name="item-${formIndex}-quantity" 
+                       id="id_item-${formIndex}-quantity" 
+                       min="1" value="1" required>
+            </div>
+            <div class="col unit-price">
+                <input type="number" name="item-${formIndex}-unit_price" 
+                       id="id_item-${formIndex}-unit_price" 
+                       step="0.01" min="0" value="0" required>
+            </div>
+            <div class="col amount">0</div>
+            <div class="col actions">
+                <button type="button" class="delete-btn" onclick="deleteInvoiceItem(this)">×</button>
+            </div>
+        `;
+        
+        container.appendChild(newRow);
+        formIndex++;
+        document.getElementById('item-count').value = formIndex;
+        
+        setupRowCalculations(newRow);
+    };
+
+    window.deleteInvoiceItem = function(button) {
+        const container = document.getElementById('invoice-items');
+        if (container.children.length > 1) {
+            const row = button.closest('.table-row');
+            row.remove();
+            updateTotals();
+        }
+    };
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up calculations for existing rows
+        document.querySelectorAll('.table-row').forEach(row => {
+            setupRowCalculations(row);
+            // Trigger initial calculation for existing items
+            const quantityInput = row.querySelector('input[id*=quantity]');
+            const event = new Event('input', { bubbles: true });
+            quantityInput.dispatchEvent(event);
+        });
+
+        document.getElementById('discount').addEventListener('input', updateTotals);
+        document.getElementById('id_tax').addEventListener('input', updateTotals);
+
+        if (document.querySelectorAll('.table-row').length === 0) {
+            addInvoiceItem();
+        }
+
+        // Trigger initial calculation of totals
+        updateTotals();
+    });
+})();
+</script>
+{% endblock %}
